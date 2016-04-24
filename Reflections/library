@@ -1,0 +1,12 @@
+-Commonly used funtions are written by programmers and bundled together so that other programmers need not repeat the effort, so that the common functions can be used as tools for building up more complex programs rather than spending effort in re-inventing the wheel. 
+-Libraries are binary files that we get on linking object files(.o) using the linker.
+-Libraries are separated into two types of files header files and implementation files.
+-Header files contains only the function definition not the actual code this helps to perform information hiding.
+-Header files and implementation files are complied together and linked using linker and supplied to the user as binary files, then the user can use them by including the header file to his code, unaware of the actual implementation.
+-First step is to include the library
+ #include<stdio.h> to include the stdio.h library to include the libraries present in the /usr/include folder.
+ #include "lib.h" if the library is present in the same folder as the code.
+-Second step is to link the binary library file when we compile our code, because the header file does not contain implementation code, so if we forget this strep we get error about undefined references in our code.
+  to link a library     clang hello.c -l[library_name]. Most of the standard libraries are automatically linked like the stdio.h library, but some  
+  libraries like the ones custom created by you or the math.h library are not automatically linked, in such case we need to add a flag
+  while compling telling the compiler to link the library binaries, here -lm will do for math.h
