@@ -25,6 +25,7 @@
 // constants
 #define DIM_MIN 3
 #define DIM_MAX 9
+#define BLANK 0
 
 // board
 int board[DIM_MAX][DIM_MAX];
@@ -167,12 +168,9 @@ void init(void)
     }
     if (!(d % 2)) {     // if even then remainder will be 0, then we have to change position of 1 and 2
         board[d-1][d-2] = 2;
-        if(d == 2)
-            board[0][1] = 1;
-        else
-            board[d-1][d-3] = 1;
+        board[d-1][d-3] = 1;
     }
-    board[d-1][d-1] = 95;
+    board[d-1][d-1] = BLANK;
     blank_col = d-1;
     blank_row = d-1;
 }
@@ -183,8 +181,12 @@ void init(void)
 void draw(void)
 {
     for (int row = 0; row < d; ++row) {
-        for (int col = 0; col < d; ++col)
-            printf(" %2d ", board[row][col]);
+        for (int col = 0; col < d; ++col) {
+            if (board[row][col] == BLANK)
+                printf("  _ ");
+            else
+                printf(" %2d ", board[row][col]);
+        }
         printf("\n");
     }
 }
@@ -199,8 +201,13 @@ bool move(int tile)
     for (row = 0; row < d; ++row) {
         for (col = 0; col < d; ++col)
             if (board[row][col] == tile) {
-               if ((abs(row - blank_row) == 1) &&  (abs(col - blank_col) == 1))
+               if (((row == blank_row) &&  (abs(col - blank_col) == 1)) || ((abs(row - blank_row) == 1 && (col == blank_col)))){
+                    board[blank_row][blank_col] = board[row][col];
+                    board[row][col] = BLANK;
+                    blank_row = row;
+                    blank_col = col;
                     return true;
+               }
                 else
                     return false;
             }
@@ -218,7 +225,7 @@ bool won(void)
     for (int row = 0; row < d; ++row) {
         for (int col = 0; col < d; ++col) {
             if ((row == d-1) && (col == d-1)){
-                if (board[row][col] != 95)
+                if (board[row][col] != BLANK)
                     return false;
             }
             else{
