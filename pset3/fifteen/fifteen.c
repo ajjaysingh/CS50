@@ -31,6 +31,7 @@ int board[DIM_MAX][DIM_MAX];
 
 // dimensions
 int d;
+int blank_row, blank_col;
 
 // prototypes
 void clear(void);
@@ -159,7 +160,21 @@ void greet(void)
  */
 void init(void)
 {
-    // TODO
+    int start = d * d - 1;
+    for (int row = 0; row < d; ++row) {
+        for (int col = 0; col < d; ++col)
+            board[row][col] = start--;
+    }
+    if (!(d % 2)) {     // if even then remainder will be 0, then we have to change position of 1 and 2
+        board[d-1][d-2] = 2;
+        if(d == 2)
+            board[0][1] = 1;
+        else
+            board[d-1][d-3] = 1;
+    }
+    board[d-1][d-1] = 95;
+    blank_col = d-1;
+    blank_row = d-1;
 }
 
 /**
@@ -167,7 +182,11 @@ void init(void)
  */
 void draw(void)
 {
-    // TODO
+    for (int row = 0; row < d; ++row) {
+        for (int col = 0; col < d; ++col)
+            printf(" %2d ", board[row][col]);
+        printf("\n");
+    }
 }
 
 /**
@@ -176,7 +195,16 @@ void draw(void)
  */
 bool move(int tile)
 {
-    // TODO
+    int row, col;
+    for (row = 0; row < d; ++row) {
+        for (col = 0; col < d; ++col)
+            if (board[row][col] == tile) {
+               if ((abs(row - blank_row) == 1) &&  (abs(col - blank_col) == 1))
+                    return true;
+                else
+                    return false;
+            }
+    }
     return false;
 }
 
@@ -186,6 +214,18 @@ bool move(int tile)
  */
 bool won(void)
 {
-    // TODO
-    return false;
+    int num = 1;
+    for (int row = 0; row < d; ++row) {
+        for (int col = 0; col < d; ++col) {
+            if ((row == d-1) && (col == d-1)){
+                if (board[row][col] != 95)
+                    return false;
+            }
+            else{
+                if (board[row][col] != num++)
+                    return false;
+            }
+        }
+    }
+    return true;
 }
