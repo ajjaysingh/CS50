@@ -1,0 +1,5 @@
+Merge sort sorts by dividing the array until we are left with just single elements then sorting them while merging.
+If we divide 'n' element array into half every time then no of times it will be divided will be ---- log(n)
+Each time we split the list, we had to merge n elements together(we need to move n elements)    ---- n
+
+therefore the time complexity of merge sort is o(nlogn).
